@@ -120,22 +120,30 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
             <div>
               <h2 className="text-2xl font-bold text-white mb-4 uppercase tracking-tighter">Detaylar</h2>
               <div className="bg-black/40 rounded-2xl p-6 border border-pink-500/5 space-y-4">
-                <div className="flex justify-between items-center py-2 border-b border-white/5">
-                  <span className="text-gray-400">Müsaitlik</span>
-                  <span className="text-pink-100 font-medium font-sans uppercase text-xs">22:00 Sonrası</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-white/5">
-                  <span className="text-gray-400">Diller</span>
-                  <span className="text-white font-medium">Türkçe, İngilizce</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-white/5">
-                  <span className="text-gray-400">Saç Rengi</span>
-                  <span className="text-white font-medium">Kumral</span>
-                </div>
-                <div className="flex justify-between items-center py-2">
-                  <span className="text-gray-400">Göz Rengi</span>
-                  <span className="text-white font-medium">Kahverengi</span>
-                </div>
+                {(profile as any).availability && (
+                  <div className="flex justify-between items-center py-2 border-b border-white/5">
+                    <span className="text-gray-400">Müsaitlik</span>
+                    <span className="text-pink-100 font-medium font-sans uppercase text-xs">{(profile as any).availability}</span>
+                  </div>
+                )}
+                {(profile as any).hairColor && (
+                  <div className="flex justify-between items-center py-2 border-b border-white/5">
+                    <span className="text-gray-400">Saç Rengi</span>
+                    <span className="text-white font-medium">{(profile as any).hairColor}</span>
+                  </div>
+                )}
+                {(profile as any).height && (
+                  <div className="flex justify-between items-center py-2 border-b border-white/5">
+                    <span className="text-gray-400">Boy</span>
+                    <span className="text-white font-medium">{(profile as any).height}</span>
+                  </div>
+                )}
+                {(profile as any).weight && (
+                  <div className="flex justify-between items-center py-2">
+                    <span className="text-gray-400">Kilo</span>
+                    <span className="text-white font-medium">{(profile as any).weight}</span>
+                  </div>
+                )}
               </div>
 
               {/* Sample Contact Box */}
