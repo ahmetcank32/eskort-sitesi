@@ -80,6 +80,13 @@ export default function AddProfilePage() {
     setError("");
     setSuccess("");
 
+    // Validate that at least cover image is uploaded
+    if (!imageUrls[0]) {
+      setError("Lütfen en az bir fotoğraf yükleyin.");
+      setLoading(false);
+      return;
+    }
+
     const formData = new FormData(e.currentTarget);
 
     // Add image URLs to form data
@@ -155,7 +162,7 @@ export default function AddProfilePage() {
         </div>
 
         <div className="space-y-6">
-          <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Fotoğraflar (5 Adet)</label>
+          <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Fotoğraflar (5 Adet) <span className="text-pink-500">*</span></label>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {[0, 1, 2, 3, 4].map((index) => (
               <div key={index} className="space-y-2">
@@ -170,6 +177,7 @@ export default function AddProfilePage() {
                     disabled={uploading}
                     id={`file-${index}`}
                     className="hidden"
+                    required={index === 0}
                   />
                   <label
                     htmlFor={`file-${index}`}
