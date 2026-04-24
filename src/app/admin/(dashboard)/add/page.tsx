@@ -15,6 +15,7 @@ export default function AddProfilePage() {
   const [authChecked, setAuthChecked] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>(["", "", "", "", ""]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>(["", "", "", "", ""]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -37,6 +38,15 @@ export default function AddProfilePage() {
 
   async function handleUpload(file: File, index: number) {
     if (!file) return;
+
+    // Show local preview immediately
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const newPreviews = [...previewUrls];
+      newPreviews[index] = reader.result as string;
+      setPreviewUrls(newPreviews);
+    };
+    reader.readAsDataURL(file);
 
     setUploading(true);
     const formData = new FormData();
@@ -88,6 +98,7 @@ export default function AddProfilePage() {
       setSuccess("Profil başarıyla eklendi!");
       (e.target as HTMLFormElement).reset();
       setImageUrls(["", "", "", "", ""]);
+      setPreviewUrls(["", "", "", "", ""]);
     }
 
     setLoading(false);
@@ -148,18 +159,34 @@ export default function AddProfilePage() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
             {[0, 1, 2, 3, 4].map((index) => (
               <div key={index} className="space-y-2">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) handleUpload(file, index);
-                  }}
-                  disabled={uploading}
-                  className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-pink-500 file:text-black file:font-bold file:cursor-pointer"
-                />
-                {imageUrls[index] && (
-                  <img src={imageUrls[index]} alt="" className="w-full h-20 object-cover rounded-lg" />
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleUpload(file, index);
+                    }}
+                    disabled={uploading}
+                    id={`file-${index}`}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor={`file-${index}`}
+                    className="block bg-black/40 border-2 border-dashed border-white/20 hover:border-pink-500 rounded-xl p-4 text-center cursor-pointer transition-all group"
+                  >
+                    <div className="text-gray-400 group-hover:text-pink-500 transition-colors">
+                      <div className="text-2xl mb-1">+</div>
+                      <div className="text-xs font-bold uppercase tracking-wider">Fotoğraf Seç</div>
+                    </div>
+                  </label>
+                </div>
+                {(previewUrls[index] || imageUrls[index]) && (
+                  <img
+                    src={previewUrls[index] || imageUrls[index]}
+                    alt=""
+                    className="w-full h-32 object-cover rounded-lg border border-white/10"
+                  />
                 )}
               </div>
             ))}
