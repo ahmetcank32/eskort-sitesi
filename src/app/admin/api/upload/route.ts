@@ -23,12 +23,14 @@ export async function POST(request: Request) {
     console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
 
     const blob = await put(file.name, file, {
-      access: 'public',
+      access: 'private',
     });
 
     console.log('Upload successful:', blob.url);
 
-    return NextResponse.json({ url: blob.url });
+    // Return URL that uses our image serving route
+    const imageUrl = `/admin/api/image?pathname=${blob.pathname}`;
+    return NextResponse.json({ url: imageUrl, pathname: blob.pathname });
   } catch (error: any) {
     console.error('Upload error:', error);
     console.error('Error message:', error.message);
