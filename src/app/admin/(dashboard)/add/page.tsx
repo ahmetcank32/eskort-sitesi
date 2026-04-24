@@ -13,6 +13,8 @@ export default function AddProfilePage() {
   const [success, setSuccess] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageUrls, setImageUrls] = useState<string[]>(["", "", "", "", ""]);
 
   useEffect(() => {
     async function checkAuth() {
@@ -33,6 +35,35 @@ export default function AddProfilePage() {
     return null;
   }
 
+  async function handleUpload(file: File, index: number) {
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      const response = await fetch('/admin/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        const newUrls = [...imageUrls];
+        newUrls[index] = data.url;
+        setImageUrls(newUrls);
+      } else {
+        setError('Fotoğraf yüklenemedi');
+      }
+    } catch (err) {
+      setError('Fotoğraf yüklenirken hata oluştu');
+    }
+
+    setUploading(false);
+  }
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
@@ -40,6 +71,15 @@ export default function AddProfilePage() {
     setSuccess("");
 
     const formData = new FormData(e.currentTarget);
+
+    // Add image URLs to form data
+    imageUrls.forEach((url, index) => {
+      if (url) {
+        const fieldName = index === 0 ? 'coverImage' : `image${index + 1}`;
+        formData.append(fieldName, url);
+      }
+    });
+
     const result = await addProfile(formData);
 
     if (result.error) {
@@ -47,6 +87,7 @@ export default function AddProfilePage() {
     } else if (result.success) {
       setSuccess("Profil başarıyla eklendi!");
       (e.target as HTMLFormElement).reset();
+      setImageUrls(["", "", "", "", ""]);
     }
 
     setLoading(false);
@@ -105,11 +146,23 @@ export default function AddProfilePage() {
         <div className="space-y-6">
           <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Fotoğraflar (5 Adet)</label>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            <input name="coverImage" type="url" required className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white" placeholder="Foto 1" />
-            <input name="image2" type="url" className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white" placeholder="Foto 2" />
-            <input name="image3" type="url" className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white" placeholder="Foto 3" />
-            <input name="image4" type="url" className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white" placeholder="Foto 4" />
-            <input name="image5" type="url" className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white" placeholder="Foto 5" />
+            {[0, 1, 2, 3, 4].map((index) => (
+              <div key={index} className="space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) handleUpload(file, index);
+                  }}
+                  disabled={uploading}
+                  className="bg-black/40 border border-white/10 rounded-xl p-3 text-xs text-white file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-pink-500 file:text-black file:font-bold file:cursor-pointer"
+                />
+                {imageUrls[index] && (
+                  <img src={imageUrls[index]} alt="" className="w-full h-20 object-cover rounded-lg" />
+                )}
+              </div>
+            ))}
           </div>
         </div>
 
