@@ -161,6 +161,30 @@ export default function AddProfilePage() {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Müsaitlik</label>
+            <input name="availability" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-pink-500" placeholder="Örn. Her gün 10:00-22:00" />
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Saç Rengi</label>
+            <input name="hairColor" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-pink-500" placeholder="Örn. Sarışın" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="space-y-4">
+            <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Boy</label>
+            <input name="height" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-pink-500" placeholder="Örn. 170 cm" />
+          </div>
+
+          <div className="space-y-4">
+            <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Kilo</label>
+            <input name="weight" className="w-full bg-black/40 border border-white/10 rounded-2xl p-4 text-white focus:outline-none focus:border-pink-500" placeholder="Örn. 55 kg" />
+          </div>
+        </div>
+
         <div className="space-y-6">
           <label className="text-gray-400 text-xs font-bold uppercase tracking-widest ml-1">Fotoğraflar (5 Adet) <span className="text-pink-500">*</span></label>
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">

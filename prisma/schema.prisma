@@ -21,6 +21,10 @@ model Profile {
   phone       String?
   vip         Boolean  @default(false)
   features    String[]
+  availability String?
+  hairColor   String?
+  height      String?
+  weight      String?
   gallery     Gallery[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

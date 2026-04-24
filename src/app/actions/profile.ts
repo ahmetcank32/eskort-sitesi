@@ -17,6 +17,10 @@ export async function addProfile(formData: FormData) {
     const phone = formData.get("phone") as string;
     const vip = formData.get("vip") === "on";
     const featuresRaw = formData.get("features") as string;
+    const availability = formData.get("availability") as string;
+    const hairColor = formData.get("hairColor") as string;
+    const height = formData.get("height") as string;
+    const weight = formData.get("weight") as string;
 
     // Convert comma-separated string to array
     const features = featuresRaw ? featuresRaw.split(",").map(f => f.trim()) : [];
@@ -39,6 +43,10 @@ export async function addProfile(formData: FormData) {
         phone,
         vip,
         features,
+        availability,
+        hairColor,
+        height,
+        weight,
       },
     });
 
@@ -66,6 +74,10 @@ export async function updateProfile(id: string, formData: FormData) {
     const phone = formData.get("phone") as string;
     const vip = formData.get("vip") === "on";
     const featuresRaw = formData.get("features") as string;
+    const availability = formData.get("availability") as string;
+    const hairColor = formData.get("hairColor") as string;
+    const height = formData.get("height") as string;
+    const weight = formData.get("weight") as string;
 
     const features = featuresRaw ? featuresRaw.split(",").map(f => f.trim()) : [];
 
@@ -88,6 +100,10 @@ export async function updateProfile(id: string, formData: FormData) {
         phone,
         vip,
         features,
+        availability,
+        hairColor,
+        height,
+        weight,
       },
     });
 
