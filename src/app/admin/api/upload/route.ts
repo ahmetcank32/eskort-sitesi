@@ -20,13 +20,19 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'File size must be less than 5MB' }, { status: 400 });
     }
 
+    console.log('Uploading file:', file.name, 'Size:', file.size, 'Type:', file.type);
+
     const blob = await put(file.name, file, {
       access: 'public',
     });
 
+    console.log('Upload successful:', blob.url);
+
     return NextResponse.json({ url: blob.url });
   } catch (error: any) {
     console.error('Upload error:', error);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    console.error('Error message:', error.message);
+    console.error('Error stack:', error.stack);
+    return NextResponse.json({ error: error.message || 'Upload failed' }, { status: 500 });
   }
 }
