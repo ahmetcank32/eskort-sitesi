@@ -190,21 +190,15 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
                 Ara
               </button>
 
-              <button
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: `${profile.name} ${profile.age} Yaş - Çanakkale Escort`,
-                      text: `${profile.name} hakkında detaylı bilgi. ${profile.location}.`,
-                      url: `${baseUrl}/profile/${profile.id}`,
-                    });
-                  }
-                }}
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`${profile.name} ${profile.age} Yaş - Çanakkale Escort\n${profile.name} hakkında detaylı bilgi. ${profile.location}.\n${baseUrl}/profile/${profile.id}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl transition-colors font-medium border border-white/20"
               >
                 <Share2 size={20} />
                 Paylaş
-              </button>
+              </a>
 
               <FavoriteButton id={profile.id} />
             </div>
