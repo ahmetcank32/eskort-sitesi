@@ -48,6 +48,45 @@ export default function RootLayout({
     "priceRange": "$$$"
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Çanakkale escort hizmetleri nasıl çalışır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Çanakkale escort hizmetleri için profilimizi inceleyebilir, beğendiğiniz eskort ile iletişime geçebilirsiniz. Tüm profiller gerçek resimli ve doğrulanmıştır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Güvenlik ve gizlilik nasıl sağlanır?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tüm görüşmeler tamamen gizlidir. Kişisel bilgileriniz asla paylaşılmaz ve korunmaktadır."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Hangi bölgelerde hizmet veriyorsunuz?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Çanakkale merkez, Biga, Gelibolu, Lapseki ve Bozcaada bölgelerinde hizmet vermekteyiz."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Randevu nasıl alabilirim?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Beğendiğiniz profilin WhatsApp numarasından veya iletişim formundan randevu talebinizi iletebilirsiniz."
+        }
+      }
+    ]
+  };
+
   return (
     <html
       lang="tr"
@@ -57,6 +96,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
         />
       </head>
       <body className="min-h-full flex flex-col bg-[#0f1016] text-[#ededed]">

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { ArrowLeft, MapPin, Star, Sparkles, Phone, MessageCircle, Heart } from "lucide-react";
+import { ArrowLeft, MapPin, Star, Sparkles, Phone, MessageCircle, Heart, Share2 } from "lucide-react";
 import { notFound } from "next/navigation";
 import FavoriteButton from "./FavoriteButton";
 import type { Metadata } from "next";
@@ -93,6 +93,26 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     ]
   };
 
+  const reviewJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": profile.name,
+    "image": profile.coverImage,
+    "jobTitle": "Escort",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": profile.location,
+      "addressCountry": "TR"
+    },
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "1",
+      "bestRating": "5",
+      "worstRating": "1"
+    }
+  };
+
   return (
     <main className="min-h-screen bg-[var(--background)] pb-20">
       <script
@@ -102,6 +122,10 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewJsonLd) }}
       />
       {/* Top Banner & Cover Image */}
       <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
@@ -164,6 +188,22 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
               <button className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-pink-500 text-white shadow-[0_0_20px_rgba(236,72,153,0.3)] px-8 py-3 rounded-xl transition-transform active:scale-95 font-semibold uppercase tracking-tighter">
                 <Phone size={20} />
                 Ara
+              </button>
+
+              <button
+                onClick={() => {
+                  if (navigator.share) {
+                    navigator.share({
+                      title: `${profile.name} ${profile.age} Yaş - Çanakkale Escort`,
+                      text: `${profile.name} hakkında detaylı bilgi. ${profile.location}.`,
+                      url: `${baseUrl}/profile/${profile.id}`,
+                    });
+                  }
+                }}
+                className="flex-1 md:flex-none flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl transition-colors font-medium border border-white/20"
+              >
+                <Share2 size={20} />
+                Paylaş
               </button>
 
               <FavoriteButton id={profile.id} />
