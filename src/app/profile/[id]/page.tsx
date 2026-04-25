@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { ArrowLeft, MapPin, Star, Sparkles, Phone, MessageCircle, Heart } from "lucide-react";
 import { notFound } from "next/navigation";
 import FavoriteButton from "./FavoriteButton";
+import type { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,41 @@ async function getProfile(id: string) {
   return await prisma.profile.findUnique({
     where: { id }
   });
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const profile = await getProfile(id);
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://eskort-sitesi.vercel.app";
+
+  if (!profile) {
+    return {
+      title: "Profil Bulunamadı",
+    };
+  }
+
+  const title = `${profile.name} ${profile.age} Yaş - Çanakkale Escort | ${profile.location}`;
+  const description = `${profile.name} hakkında detaylı bilgi. ${profile.availability || 'Müsaitlik bilgisi'}. ${profile.features?.join(', ') || 'Hizmetler'}. Çanakkale'de VIP eskort hizmeti.`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${baseUrl}/profile/${profile.id}`,
+    },
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: profile.coverImage,
+          width: 1200,
+          height: 630,
+          alt: `${profile.name} - ${profile.location}`,
+        },
+      ],
+    },
+  };
 }
 
 export default async function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
@@ -20,10 +56,53 @@ export default async function ProfilePage({ params }: { params: Promise<{ id: st
     notFound();
   }
 
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://eskort-sitesi.vercel.app";
   const whatsappLink = profile.phone ? `https://wa.me/${profile.phone}?text=Merhaba, profilinizi inceledim.` : '#';
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": profile.name,
+    "description": profile.bio,
+    "image": profile.coverImage,
+    "jobTitle": "Escort",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": profile.location,
+      "addressCountry": "TR"
+    },
+    "url": `${baseUrl}/profile/${profile.id}`,
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Ana Sayfa",
+        "item": baseUrl
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": `${profile.name} ${profile.age} Yaş`,
+        "item": `${baseUrl}/profile/${profile.id}`
+      }
+    ]
+  };
 
   return (
     <main className="min-h-screen bg-[var(--background)] pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       {/* Top Banner & Cover Image */}
       <div className="relative h-[60vh] md:h-[70vh] w-full overflow-hidden">
         <div
